@@ -2,7 +2,7 @@
 
 import { Recipe } from '@/types/recipe';
 import { X, Heart, Clock, Users, Star, ChefHat } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface RecipeModalProps {
   recipe: Recipe;
@@ -23,6 +23,11 @@ export default function RecipeModal({
 }: RecipeModalProps) {
   const [servings, setServings] = useState(recipe.servings);
   const [hoveredStar, setHoveredStar] = useState(0);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const servingMultiplier = servings / recipe.servings;
 
@@ -39,12 +44,15 @@ export default function RecipeModal({
             <h2 className="text-3xl font-bold text-white mb-2">{recipe.name}</h2>
             <p className="text-orange-100">{recipe.description}</p>
           </div>
-          <button
-            onClick={onClose}
-            className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
-          >
-            <X className="w-6 h-6" />
-          </button>
+          {isClient && (
+            <button
+              onClick={onClose}
+              className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2 transition-colors"
+              suppressHydrationWarning={true}
+            >
+              <X className="w-6 h-6" />
+            </button>
+          )}
         </div>
 
         <div className="p-6">
@@ -62,37 +70,43 @@ export default function RecipeModal({
               <Users className="w-5 h-5 text-orange-600" />
               <span className="font-semibold">{recipe.servings} servings</span>
             </div>
-            <button
-              onClick={() => onFavoriteToggle(recipe.id)}
-              className="ml-auto flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-800 transition-colors"
-            >
-              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
-              {isFavorite ? 'Saved' : 'Save'}
-            </button>
+            {isClient && (
+              <button
+                onClick={() => onFavoriteToggle(recipe.id)}
+                className="ml-auto flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-lg hover:bg-orange-200 dark:hover:bg-orange-800 transition-colors"
+                suppressHydrationWarning={true}
+              >
+                <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+                {isFavorite ? 'Saved' : 'Save'}
+              </button>
+            )}
           </div>
 
           {/* Rating */}
           <div className="mb-6">
             <h3 className="font-semibold text-gray-800 dark:text-white mb-2">Rate this recipe</h3>
-            <div className="flex gap-1">
-              {[1, 2, 3, 4, 5].map(star => (
-                <button
-                  key={star}
-                  onClick={() => handleRate(star)}
-                  onMouseEnter={() => setHoveredStar(star)}
-                  onMouseLeave={() => setHoveredStar(0)}
-                  className="transition-transform hover:scale-110"
-                >
-                  <Star
-                    className={`w-8 h-8 ${
-                      star <= (hoveredStar || userRating || 0)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : 'text-gray-300'
-                    }`}
-                  />
-                </button>
-              ))}
-            </div>
+            {isClient && (
+              <div className="flex gap-1">
+                {[1, 2, 3, 4, 5].map(star => (
+                  <button
+                    key={star}
+                    onClick={() => handleRate(star)}
+                    onMouseEnter={() => setHoveredStar(star)}
+                    onMouseLeave={() => setHoveredStar(0)}
+                    className="transition-transform hover:scale-110"
+                    suppressHydrationWarning={true}
+                  >
+                    <Star
+                      className={`w-8 h-8 ${
+                        star <= (hoveredStar || userRating || 0)
+                          ? 'fill-yellow-400 text-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Tags */}
@@ -138,21 +152,25 @@ export default function RecipeModal({
           {/* Serving Size Adjuster */}
           <div className="mb-6">
             <h3 className="font-semibold text-gray-800 dark:text-white mb-3">Adjust Servings</h3>
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setServings(Math.max(1, servings - 1))}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-bold"
-              >
-                -
-              </button>
-              <span className="text-xl font-semibold">{servings} servings</span>
-              <button
-                onClick={() => setServings(servings + 1)}
-                className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-bold"
-              >
-                +
-              </button>
-            </div>
+            {isClient && (
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setServings(Math.max(1, servings - 1))}
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-bold"
+                  suppressHydrationWarning={true}
+                >
+                  -
+                </button>
+                <span className="text-xl font-semibold">{servings} servings</span>
+                <button
+                  onClick={() => setServings(servings + 1)}
+                  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 font-bold"
+                  suppressHydrationWarning={true}
+                >
+                  +
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Ingredients */}

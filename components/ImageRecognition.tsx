@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Upload, Loader2, AlertCircle } from 'lucide-react';
 import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import '@tensorflow/tfjs';
@@ -34,8 +34,13 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const detectObjects = async (imageElement: HTMLImageElement) => {
     try {
@@ -107,18 +112,21 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
       />
 
       {!preview ? (
-        <button
-          onClick={() => fileInputRef.current?.click()}
-          className="w-full flex flex-col items-center justify-center py-8 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
-        >
-          <Upload className="w-12 h-12 text-gray-400 mb-3" />
-          <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">
-            Upload an image of your ingredients
-          </p>
-          <p className="text-sm text-gray-500 dark:text-gray-500">
-            We'll try to identify the ingredients for you
-          </p>
-        </button>
+        isClient && (
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="w-full flex flex-col items-center justify-center py-8 hover:bg-gray-50 dark:hover:bg-gray-700 rounded-lg transition-colors"
+            suppressHydrationWarning={true}
+          >
+            <Upload className="w-12 h-12 text-gray-400 mb-3" />
+            <p className="text-gray-600 dark:text-gray-400 font-medium mb-1">
+              Upload an image of your ingredients
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-500">
+              We'll try to identify the ingredients for you
+            </p>
+          </button>
+        )
       ) : (
         <div className="space-y-4">
           <div className="relative">
@@ -145,18 +153,21 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
             </div>
           )}
 
-          <button
-            onClick={() => {
-              setPreview(null);
-              setError(null);
-              if (fileInputRef.current) {
-                fileInputRef.current.value = '';
-              }
-            }}
-            className="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-          >
-            Upload Different Image
-          </button>
+          {isClient && (
+            <button
+              onClick={() => {
+                setPreview(null);
+                setError(null);
+                if (fileInputRef.current) {
+                  fileInputRef.current.value = '';
+                }
+              }}
+              className="w-full px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              suppressHydrationWarning={true}
+            >
+              Upload Different Image
+            </button>
+          )}
         </div>
       )}
     </div>

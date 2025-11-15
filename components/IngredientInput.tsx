@@ -86,13 +86,14 @@ export default function IngredientInput({
           />
 
           {/* Suggestions Dropdown */}
-          {showSuggestions && suggestions.length > 0 && inputValue && (
+          {isClient && showSuggestions && suggestions.length > 0 && inputValue && (
             <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-60 overflow-y-auto">
               {suggestions.map(suggestion => (
                 <button
                   key={suggestion}
                   onClick={() => addIngredient(suggestion)}
                   className="w-full text-left px-4 py-2 hover:bg-orange-50 dark:hover:bg-gray-600 transition-colors"
+                  suppressHydrationWarning={true}
                 >
                   {suggestion}
                 </button>
@@ -101,21 +102,27 @@ export default function IngredientInput({
           )}
         </div>
 
-        <button
-          onClick={() => inputValue.trim() && addIngredient(inputValue)}
-          className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-semibold flex items-center gap-2"
-        >
-          <Plus className="w-5 h-5" />
-          Add
-        </button>
+        {isClient && (
+          <button
+            onClick={() => inputValue.trim() && addIngredient(inputValue)}
+            className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors font-semibold flex items-center gap-2"
+            suppressHydrationWarning={true}
+          >
+            <Plus className="w-5 h-5" />
+            Add
+          </button>
+        )}
 
-        <button
-          onClick={() => setShowImageUpload(!showImageUpload)}
-          className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2"
-          title="Upload ingredient photo"
-        >
-          <Camera className="w-5 h-5" />
-        </button>
+        {isClient && (
+          <button
+            onClick={() => setShowImageUpload(!showImageUpload)}
+            className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center gap-2"
+            title="Upload ingredient photo"
+            suppressHydrationWarning={true}
+          >
+            <Camera className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Image Recognition Component */}
@@ -134,12 +141,15 @@ export default function IngredientInput({
               className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 dark:bg-orange-900 text-orange-800 dark:text-orange-200 rounded-full font-medium"
             >
               {ingredient}
-              <button
-                onClick={() => removeIngredient(ingredient)}
-                className="hover:text-orange-600 dark:hover:text-orange-400"
-              >
-                <X className="w-4 h-4" />
-              </button>
+              {isClient && (
+                <button
+                  onClick={() => removeIngredient(ingredient)}
+                  className="hover:text-orange-600 dark:hover:text-orange-400"
+                  suppressHydrationWarning={true}
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </span>
           ))}
         </div>
