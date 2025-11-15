@@ -1,0 +1,9 @@
+# Allow all web crawlers
+User-agent: *
+Allow: /
+
+# Specify the location of your sitemap
+Sitemap: https://smart-recipe-generator.vercel.app/sitemap.xml
+
+# Block access to sensitive paths (none in this case, but good practice)
+Disallow: /api/

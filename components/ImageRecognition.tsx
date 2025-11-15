@@ -47,16 +47,33 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
       setIsLoading(true);
       setError(null);
 
-      // Load the COCO-SSD model
-      const model = await cocoSsd.load();
+      // Add timeout for model loading
+      const loadModelWithTimeout = () => {
+        return new Promise((resolve, reject) => {
+          const timeout = setTimeout(() => {
+            reject(new Error('Model loading timed out. Please check your internet connection.'));
+          }, 30000); // 30 second timeout
+
+          cocoSsd.load().then(model => {
+            clearTimeout(timeout);
+            resolve(model);
+          }).catch(error => {
+            clearTimeout(timeout);
+            reject(error);
+          });
+        });
+      };
+
+      // Load the COCO-SSD model with timeout
+      const model = await loadModelWithTimeout() as any;
       
       // Detect objects in the image
       const predictions = await model.detect(imageElement);
 
       // Map detected objects to ingredients
       const detectedIngredients = predictions
-        .map(prediction => objectToIngredientMap[prediction.class.toLowerCase()])
-        .filter(Boolean);
+        .map((prediction: any) => objectToIngredientMap[prediction.class.toLowerCase()])
+        .filter((ingredient: any): ingredient is string => Boolean(ingredient));
 
       const uniqueIngredients = Array.from(new Set(detectedIngredients));
 
@@ -69,7 +86,11 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
       setIsLoading(false);
     } catch (err) {
       console.error('Error detecting objects:', err);
-      setError('Failed to analyze image. Please try again.');
+      setError(
+        err instanceof Error 
+          ? err.message 
+          : 'Failed to analyze image. Please check your internet connection and try again.'
+      );
       setIsLoading(false);
     }
   };
