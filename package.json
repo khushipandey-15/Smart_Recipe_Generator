@@ -1,0 +1,36 @@
+{
+  "name": "smart_recipe_generator",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [
+    "recipe",
+    "generator",
+    "ai",
+    "ingredient-recognition"
+  ],
+  "author": "",
+  "license": "ISC",
+  "description": "Smart Recipe Generator - AI-powered recipe suggestions based on ingredients",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.17",
+    "@tensorflow-models/coco-ssd": "^2.2.3",
+    "@tensorflow/tfjs": "^4.22.0",
+    "@types/node": "^24.10.1",
+    "@types/react": "^19.2.5",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "10.4.22",
+    "lucide-react": "^0.553.0",
+    "next": "^16.0.3",
+    "postcss": "8.5.6",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "3.4.18",
+    "typescript": "^5.9.3"
+  }
+}
