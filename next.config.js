@@ -19,7 +19,12 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
 
-  // Webpack optimizations for TensorFlow.js
+  // Turbopack configuration for Next.js 16
+  turbopack: {
+    root: __dirname,
+  },
+
+  // Webpack optimizations for TensorFlow.js (fallback for --webpack flag)
   webpack: (config, { isServer }) => {
     // Optimize for client-side bundles
     if (!isServer) {
@@ -35,7 +40,6 @@ const nextConfig = {
   },
 
   // Performance optimizations
-  swcMinify: true,
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
