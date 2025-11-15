@@ -71,11 +71,11 @@ export default function ImageRecognition({ onIngredientsDetected }: ImageRecogni
       const predictions = await model.detect(imageElement);
 
       // Map detected objects to ingredients
-      const detectedIngredients = predictions
+      const detectedIngredients: string[] = predictions
         .map((prediction: any) => objectToIngredientMap[prediction.class.toLowerCase()])
         .filter((ingredient: any): ingredient is string => Boolean(ingredient));
 
-      const uniqueIngredients = Array.from(new Set(detectedIngredients));
+      const uniqueIngredients: string[] = Array.from(new Set(detectedIngredients));
 
       if (uniqueIngredients.length === 0) {
         setError('No recognizable ingredients found. Try uploading a clearer image or add ingredients manually.');
